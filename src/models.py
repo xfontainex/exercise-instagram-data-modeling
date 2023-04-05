@@ -29,11 +29,6 @@ Base = declarative_base()
     # def to_dict(self):
     #     return {}
 
-class Followers(Base): 
-    __tablename__ = "Followers"
-    id=Column(Integer, primary_key=True)
-    user_from_id = Column(Integer, ForeignKey("User.id"))
-    user_to_id = Column(Integer, ForeignKey("User.id"))
     
 class User(Base) :
     __tablename__="User"
@@ -42,11 +37,20 @@ class User(Base) :
     firstname = Column(String (256))  
     lastname = Column(String (256))  
     email = Column(String (256)) 
+    post = relationship("Post")
+    comment = relationship("Comment", backref='User', lazy=True)
+    post = relationship('Post', backref='User', lazy=True)
     
 class Post(Base) :
     __tablename__="Post"
     id=Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("User.id"))
+
+class Followers(Base): 
+    __tablename__ = "Followers"
+    id=Column(Integer, primary_key=True)
+    user_from_id = Column(Integer, ForeignKey("User.id"))
+    user_to_id = Column(Integer, ForeignKey("User.id"))
 
 class Media(Base) :
     __tablename__="Media"
@@ -59,9 +63,8 @@ class Comment(Base) :
     __tablename__="Comment"
     id = Column(Integer, primary_key=True)
     author_id = Column(Integer, ForeignKey("User.id"))
-    post_id = Column(Integer, ForeignKey("User.id")) 
+    post_id = Column(Integer, ForeignKey("User.id"))
 
-             
 
 ## Draw from SQLAlchemy base
 try:
